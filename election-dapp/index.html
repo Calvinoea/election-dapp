@@ -1,0 +1,124 @@
+<!DOCTYPE <!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js">
+<!--<![endif]-->
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The 3 headings above must come first in the head; any other head content must come afterthese tags -->
+    <title>Candidates</title>
+    <meta name="description" content="">
+
+    <!--Bootstrap-->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+</head>
+
+<body>
+
+    <div class="container" style="width: 650px;">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+
+                <h1>Candidates</h1>
+                <hr/>
+                <div id="content">
+                    <h4 id="candidateName"></h4>
+                    <hr/>
+                    <form role="form">
+                        <div class="form-group" style="display:inline;">
+                            <div class="input-group">
+                                <input class="form-control input-lg" name="candidateName">
+                                </input>
+                                <span class="input-group-btn">
+                                <button type="submit" class="btn btn-primary btn-lg">Add Candidate</button>
+                            </span>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/web3.min.js"></script>
+    <script>
+        //Initialize Web3
+
+        if (typeof web3 !== 'undefined') {
+
+            web3 = new Web3(web3.currentProvider);
+        } else {
+
+            web3 = new Web3(new Web3.providers.HttpProvider('http://localhost:7545'));
+
+        }
+
+        // Set Account
+        web3.eth.defaultAccount = web3.eth.accounts[0];
+
+
+        // Set Contract Abi
+        //Add Your Contract ABI here!!!
+        var contractAbi = [{
+            "constant": true,
+            "inputs": [],
+            "name": "candidateName",
+            "outputs": [{
+                "name": "",
+                "type": "string"
+            }],
+            "payable": false,
+            "stateMutability": "view",
+            "type": "function"
+        }, {
+            "constant": false,
+            "inputs": [{
+                "name": "_name",
+                "type": "string"
+            }],
+            "name": "setCandidate",
+            "outputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "function"
+        }, {
+            "inputs": [],
+            "payable": false,
+            "stateMutability": "nonpayable",
+            "type": "constructor"
+        }];
+
+
+
+        // Set Contract Address
+        var contractAddress = '0x44C57F1Fbf0149f1746A2dfCa98cE43F30581Eca '; // Add Your Contract Address here!!!
+
+        // Set the Contract
+        var contract = web3.eth.contract(contractAbi).at(contractAddress);
+
+        // Display Candidate Name
+
+        contract.candidateName(function(err, candidateName) {
+            $('#candidateName').html(candidateName);
+        });
+
+        // Change the Candidate Name
+        $('form').on('submit', function(event) {
+            event.preventDefault();
+            contract.setCandidate($('input').val());
+        });
+    </script>
+</body>
+
+</html>
